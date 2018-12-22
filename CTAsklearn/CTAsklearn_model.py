@@ -25,7 +25,6 @@ label = 'CTADaytest'
 futuremodel = CTAsklearn.CTAsklearn.CTADaySklearn(code, pnumber, label)
 self = futuremodel
 
-
 ####################################################################
 ###############################minute test##############################
 ####################################################################,
@@ -77,6 +76,3 @@ hsma = pd.read_hdf(filename, 'hsma')
 hsmaratio, portfolio = futuremodel.hsmadata_predp_r(hsma, lr)
 tradestat = InvestBase.tradestat_portfolio(portfolio)
 plt.plot(portfolio.ratio)
-
-
-

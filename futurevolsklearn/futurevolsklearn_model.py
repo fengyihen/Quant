@@ -42,18 +42,18 @@ tradestatlist = futuremodel.MA_optimizer(malens)
 
 malen = 10
 hsma = futuremodel.MA(malen)
-futuremodel.tradestat(hsma)                
-    
+futuremodel.tradestat(hsma)
+
 malen1 = 10
 malen2 = 30
 hsma = futuremodel.MAcross(malen1, malen2)
-futuremodel.tradestat(hsma) 
- 
+futuremodel.tradestat(hsma)
+
 malen = 10
 s = 30
 hsma = futuremodel.MA_ADX(malen, s)
-futuremodel.tradestat(hsma)   
-                
+futuremodel.tradestat(hsma)
+
 ###############################linear regression#############
 testlen = 30
 ntrain = 12
@@ -62,11 +62,11 @@ timesteps = 3
 day = 10
 #feature_sel = "SelectKBest"
 feature_sel = None
-hsma = futuremodel.linearregressor(testlen, ntrain, raw, timesteps, day, feature_sel)
+hsma = futuremodel.linearregressor(testlen, ntrain, raw, timesteps, day,
+                                   feature_sel)
 hsmatrade = futuremodel.hsmatraderegressor(hsma, day)
 r = 0.01
 hsmatrade = futuremodel.hsmatraderegressor_r(hsma, day, r)
-
 
 ###############################extra trees regression#############
 testlen = 20
@@ -95,5 +95,3 @@ hsma = futuremodel.linearvar(testlen, ntrain, raw, timesteps, vn, feature_sel)
 hsmatrade = futuremodel.hsmatraderegressor(hsma, day)
 r = 0.01
 hsmatrade = futuremodel.hsmatraderegressor_r(hsma, day, r)
-
-

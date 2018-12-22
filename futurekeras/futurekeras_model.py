@@ -37,9 +37,9 @@ attry = 'roo'
 modellabel = 'LSTM1cls'
 #modellabel = 'LSTM2cls'
 readfile = False
-hsma = futuremodel.lstm_classification_r(testlen, ntrain, epochs,
-                                batchsize, timesteps, day, tr, activation,
-                                attr, attry, modellabel, readfile)
+hsma = futuremodel.lstm_classification_r(testlen, ntrain, epochs, batchsize,
+                                         timesteps, day, tr, activation, attr,
+                                         attry, modellabel, readfile)
 hsmaratio = futuremodel.hsmadata_daycode_lsr(hsma, day)
 tradestat = InvestBase.tradestat_portfolio(hsmaratio)
 plt.plot(hsmaratio.ratio)
@@ -50,7 +50,6 @@ hsma = pd.read_hdf(filename, 'hsma')
 hsmaratio, portfolio = futuremodel.hsmadata_predp_r(hsma, lr)
 tradestat = InvestBase.tradestat_portfolio(portfolio)
 plt.plot(portfolio.ratio)
-
 
 #每个品种单独建模
 testlen = 30  #10
@@ -176,7 +175,7 @@ batchsize = 3000
 timesteps = 20
 day = 20
 p = 0.01
-v = 1 
+v = 1
 lr = 0.04
 tr = 0.02
 activation = 'relu'
@@ -196,7 +195,8 @@ plt.plot(portfolio.ratio)
 
 #测试结果统计
 filename = 'Test\\futurekeras\\testresult\\hsma_lstm_cls_{}_v{}_day{}_attr{}_length_t{}_tr{}_timesteps{}_{}_{}_{}.h5'.format(
-    yvar,v,day,attr,length_t,tr,timesteps,activation,modellabel,self.label)
+    yvar, v, day, attr, length_t, tr, timesteps, activation, modellabel,
+    self.label)
 hsma = pd.read_hdf(filename, 'hsma')
 ncode = 10
 portfolio = futuremodel.hsmadata_fixvar_r(hsma, day, ncode, v, lr)

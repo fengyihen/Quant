@@ -20,19 +20,18 @@ from sklearn import tree
 
 
 class CTADaySklearn(FutureDay.Future):
-
-
     def __init__(self, timestep, pnumber, label):
         super(CTADaySklearn, self).__init__(pnumber, label)
         self.timestep = timestep
         self.hsmadata_raw_x = self.hsmadata_raw_x(timestep)
-    
-    #构造单个商品的x    
+
+    #构造单个商品的x
     def indexcloser1day_Long(self, code, mrlist, crlist):
-        
-        hsma_raw_x = self.hsmadata_raw_x[self.hsmadata_raw_x.code == code].copy()
+
+        hsma_raw_x = self.hsmadata_raw_x[self.hsmadata_raw_x.code ==
+                                         code].copy()
         hsma = self.hsmaall[self.hsmaall.code == code].copy()
-        
+
         mrcry = pd.DataFrame()
         for d in hsma_raw_x.date:
             print(d)
@@ -48,42 +47,50 @@ class CTADaySklearn(FutureDay.Future):
                                                                 cr, fee)
                     if hsmatrade.shape[0] == 0:
                         continue
-                    temp = pd.DataFrame({'date': d, 'mr': mr, 'cr': cr,
-                                         'ratio' : hsmatrade.traderatio.sum()
-                                         },index=[0])                    
+                    temp = pd.DataFrame({
+                        'date': d,
+                        'mr': mr,
+                        'cr': cr,
+                        'ratio': hsmatrade.traderatio.sum()
+                    },
+                                        index=[0])
                     mrcry = pd.concat([mrcry, temp])
 
         hsmadata = pd.merge(hsma_raw_x, mrcry)
         hsmadata.drop(['code', 'date'], axis=1, inplace=True)
-        
+
         return hsmadata
 
-    def randomforestregressor(self, code, mrlist, crlist, testlen, ntrain, ntrees, nodes):
-        
-        hsmadata = self.indexcloser1day_Long(code, mrlist, crlist)         
+    def randomforestregressor(self, code, mrlist, crlist, testlen, ntrain,
+                              ntrees, nodes):
+
+        hsmadata = self.indexcloser1day_Long(code, mrlist, crlist)
         dates = pd.Series(hsmadata['date'].unique()).sort_values()
         dates.index = range(0, len(dates))
-        ntest = len(dates) // testlen       
-        
+        ntest = len(dates) // testlen
+
         hsma = pd.DataFrame()
         for i in range(ntrain, ntest):
-            traindata = hsmadata[(hsmadata['date'] >= dates[(i-ntrain)*testlen]) & (hsmadata['date'] < dates[i*testlen - self.day])].copy()
-            testdata = hsmadata[(hsmadata['date'] >= dates[i*testlen]) & (hsmadata['date'] < dates[(i+1)*testlen])].copy()        
+            traindata = hsmadata[
+                (hsmadata['date'] >= dates[(i - ntrain) * testlen])
+                & (hsmadata['date'] < dates[i * testlen - self.day])].copy()
+            testdata = hsmadata[(hsmadata['date'] >= dates[i * testlen]) & (
+                hsmadata['date'] < dates[(i + 1) * testlen])].copy()
 
             traindatax = traindata.drop(['date', 'code', 'ratio'], 1)
-            traindatay = traindata['ratio']            
-            testdatax = testdata[traindatax.columns]    
+            traindatay = traindata['ratio']
+            testdatax = testdata[traindatax.columns]
 
-            treemodel = RandomForestRegressor(n_estimators=ntrees,min_samples_split=nodes*2, min_samples_leaf=nodes)
+            treemodel = RandomForestRegressor(
+                n_estimators=ntrees,
+                min_samples_split=nodes * 2,
+                min_samples_leaf=nodes)
             treemodel.fit(traindatax, traindatay)
             testdata['predratio'] = treemodel.predict(testdatax)
-            
-            hsma = pd.concat([hsma, testdata], ignore_index = True)
-        hsma.to_hdf('Test\\stocksklearn\\hsma_extratreesregressor_' + self.label + '.h5', 'hsma')
-        
-        return(hsma)
-        
-        
-        
 
+            hsma = pd.concat([hsma, testdata], ignore_index=True)
+        hsma.to_hdf(
+            'Test\\stocksklearn\\hsma_extratreesregressor_' + self.label +
+            '.h5', 'hsma')
 
+        return (hsma)

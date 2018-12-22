@@ -91,6 +91,3 @@ futuremodel.traderatiostat(hsmatrade)
 #样本外测试
 hsmatrade = futuremodel.out_of_sample_month(strategy, ncode, ntrain, *tupleArg)
 futuremodel.traderatiostat(hsmatrade)
-
-
-

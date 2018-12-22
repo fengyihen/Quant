@@ -15,7 +15,7 @@ import os
 import DynamicHedge as DH
 
 index = '000905.SH'
-market = 'index' # market index SH SZ
+market = 'index'  # market index SH SZ
 datataq = True
 day = 5
 absratio = False
@@ -55,7 +55,8 @@ ntrees = 20
 nodes = 10
 col = 'cci7'
 tn = 100
-hsma = DHModel.extratreesregressor_conditionrank(testlen, ntrain, ntrees, nodes, col, tn)
+hsma = DHModel.extratreesregressor_conditionrank(testlen, ntrain, ntrees,
+                                                 nodes, col, tn)
 
 ###############################extra trees regression cluster###
 testlen = 30
@@ -65,7 +66,8 @@ nodes = 10
 columns = ['roc_1', 'roc_3', 'roc_5', 'roc7']
 cmodel = 'KMeans'
 ncluster = 10
-hsma = DHModel.extratreesregressor_cluster(testlen, ntrain, ntrees, nodes, columns, cmodel, ncluster)
+hsma = DHModel.extratreesregressor_cluster(testlen, ntrain, ntrees, nodes,
+                                           columns, cmodel, ncluster)
 
 ###############################extra trees classifier#############
 testlen = 30
@@ -85,7 +87,7 @@ hsma = DHModel.GBRTmodel(testlen, ntrain, ntrees, nodes)
 ###############################support vector regression###########
 testlen = 5
 ntrain = 6
-kernel = 'rbf' 
+kernel = 'rbf'
 hsma = DHModel.svrmodel(testlen, ntrain, kernel)
 
 ###############################support vector regression###########
@@ -97,8 +99,8 @@ hsma = DHModel.linearsvrmodel(testlen, ntrain, batch)
 ###############################extra trees regression#############
 testlen = 30
 ntrain = 6
-solver='adam'
-hidden_layer_sizes=(20, )
+solver = 'adam'
+hidden_layer_sizes = (20, )
 hsma = DHModel.MLPRegressor(testlen, ntrain, solver, *hidden_layer_sizes)
 
 ###############################extra trees regression ind#############
@@ -109,7 +111,7 @@ nodes = 10
 hsma = DHModel.extratreesregressor_ind(testlen, ntrain, ntrees, nodes)
 
 ###############################support vector regression ind###########
-kernel = 'rbf' 
+kernel = 'rbf'
 hsma = DHModel.svrmodel_ind(testlen, ntrain, kernel)
 
 ###############################KNeighbors regression#############
@@ -129,7 +131,4 @@ DHModel.tradestatlist(hsma, n, idxma)
 minn = 30
 idxma = 0
 hsmatradeday = DHModel.hsmatradedayclassifier(hsma, minn, idxma)
-tradestat =  DHModel.tradestat(hsmatradeday)
-
-
-
+tradestat = DHModel.tradestat(hsmatradeday)

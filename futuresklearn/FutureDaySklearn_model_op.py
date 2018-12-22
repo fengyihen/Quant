@@ -21,8 +21,9 @@ code = 'rb000_day'
 day = 1
 length = [1, 3, 5, 10, 20, 40]
 timesteps = 10
-label = 'sklearntest'+str(day)
-futuremodel = futuresklearn.futuresklearn.FutureSklearn(code, day, length, timesteps, label)
+label = 'sklearntest' + str(day)
+futuremodel = futuresklearn.futuresklearn.FutureSklearn(
+    code, day, length, timesteps, label)
 self = futuremodel
 
 ###############################base strategy#####################
@@ -35,12 +36,3 @@ futuremodel.tradestat(hsma0)
 malens = [3, 5, 10, 15, 20, 30]
 #malens = [10]
 tradestatlist = futuremodel.MA_optimizer(malens)
-
-                  
-                     
-
-
-
-
-
-

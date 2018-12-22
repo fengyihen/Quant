@@ -287,7 +287,7 @@ class Future():
             hsmadata = pd.concat([hsmadata, temp], ignore_index=True)
 
         return hsmadata
-    
+
     def hsmadata_cr_x(self, timesteps):  #code 只能是商品
 
         hsmadata = pd.DataFrame()
@@ -305,7 +305,6 @@ class Future():
             hsmadata = pd.concat([hsmadata, temp], ignore_index=True)
 
         return hsmadata
-
 
     def hsmadata_breakhl_fixlength(self, testlen, length, lr):  #
 
@@ -333,15 +332,17 @@ class Future():
                 #开盘价入场
                 temp = hsma0.loc[(i + 1):(i + testlen), 'open'] < hsma0.loc[(
                     i + 1):(i + testlen), 'lowd']
-                rlist[temp] = 1 - hsma0.loc[(i + 1):(i + testlen), 'nextopen'] / (
-                    hsma0.loc[(i + 1):(i + testlen), 'open']) - fee
+                rlist[temp] = 1 - hsma0.loc[
+                    (i + 1):(i + testlen), 'nextopen'] / (hsma0.loc[
+                        (i + 1):(i + testlen), 'open']) - fee
                 #波动不足，不交易
                 temp = hsma0.loc[(i + 1):(i + testlen), 'low'] > hsma0.loc[(
                     i + 1):(i + testlen), 'lowd']
                 rlist[temp] = 0
                 #开盘波动太大，不交易
-                temp = 1 - hsma0.loc[(i + 1):(i + testlen), 'open'] / hsma0.loc[(
-                    i + 1):(i + testlen), 'preclose']
+                temp = 1 - hsma0.loc[(i + 1):
+                                     (i + testlen), 'open'] / hsma0.loc[
+                                         (i + 1):(i + testlen), 'preclose']
                 rlist[temp > lr] = 0
                 short_r = rlist.sum()
 
@@ -358,17 +359,17 @@ class Future():
                     i + 1):(i + testlen), 'highd']
                 rlist[temp] = 0
                 #开盘波动太大，不交易
-                temp = hsma0.loc[(i + 1):(i + testlen), 'open'] / hsma0.loc[(
-                    i + 1):(i + testlen), 'preclose'] - 1
+                temp = hsma0.loc[(i + 1):(i + testlen), 'open'] / hsma0.loc[
+                    (i + 1):(i + testlen), 'preclose'] - 1
                 rlist[temp > lr] = 0
                 long_r = rlist.sum()
-                
+
                 hsma0.loc[i, 'r'] = short_r + long_r
             hsma0 = hsma0[['code', 'date', 'r']]
             hsmadata = pd.concat([hsmadata, hsma0], ignore_index=True)
-            
+
         return hsmadata
-        
+
     def hsmadata_bestp(self, day, lr):  #双向交易，多空相同的p
 
         hsmadata = pd.DataFrame()
@@ -391,26 +392,26 @@ class Future():
                     rlist = 1 - hsma0.loc[(i + 1):(i + day), 'nextopen'] / (
                         hsma0.loc[(i + 1):(i + day), 'open'] * (1 - p)) - fee
                     #波动不足，不交易
-                    temp = 1 - hsma0.loc[(i + 1):(
-                        i + day), 'low'] / hsma0.loc[(i + 1):(i + day), 'open']
+                    temp = 1 - hsma0.loc[(i + 1):(i + day), 'low'] / hsma0.loc[
+                        (i + 1):(i + day), 'open']
                     rlist[temp < p] = 0
                     #开盘波动太大，不交易
-                    temp = 1 - hsma0.loc[(i + 1):(
-                        i + day), 'open'] / hsma0.loc[(i + 1):
-                                                      (i + day), 'preclose']
+                    temp = 1 - hsma0.loc[(i + 1):
+                                         (i + day), 'open'] / hsma0.loc[
+                                             (i + 1):(i + day), 'preclose']
                     rlist[temp > lr] = 0
                     r = rlist.sum()
                     #做多
-                    rlist = hsma0.loc[(i + 1):(i + day), 'nextopen'] / (
-                        hsma0.loc[(i + 1):(i + day), 'open'] *
-                        (1 + p)) - 1 - fee
+                    rlist = hsma0.loc[
+                        (i + 1):(i + day), 'nextopen'] / (hsma0.loc[
+                            (i + 1):(i + day), 'open'] * (1 + p)) - 1 - fee
                     #止盈，收益上限
-                    temp = hsma0.loc[(i + 1):(i + day), 'high'] / hsma0.loc[(
-                        i + 1):(i + day), 'open'] - 1
+                    temp = hsma0.loc[(i + 1):(i + day), 'high'] / hsma0.loc[
+                        (i + 1):(i + day), 'open'] - 1
                     rlist[temp < p] = 0
                     #开盘波动太大，不交易
-                    temp = hsma0.loc[(i + 1):(i + day), 'open'] / hsma0.loc[(
-                        i + 1):(i + day), 'preclose'] - 1
+                    temp = hsma0.loc[(i + 1):(i + day), 'open'] / hsma0.loc[
+                        (i + 1):(i + day), 'preclose'] - 1
                     rlist[temp > lr] = 0
                     r = r + rlist.sum()
                     bestp_r.append(r)
@@ -449,13 +450,13 @@ class Future():
                     rlist = 1 - hsma0.loc[(i + 1):(i + day), 'close'] / (
                         hsma0.loc[(i + 1):(i + day), 'open'] * (1 - p)) - fee
                     #波动不足，不交易
-                    temp = 1 - hsma0.loc[(i + 1):(
-                        i + day), 'low'] / hsma0.loc[(i + 1):(i + day), 'open']
+                    temp = 1 - hsma0.loc[(i + 1):(i + day), 'low'] / hsma0.loc[
+                        (i + 1):(i + day), 'open']
                     rlist[temp < p] = 0
                     #开盘波动太大，不交易
-                    temp = 1 - hsma0.loc[(i + 1):(
-                        i + day), 'open'] / hsma0.loc[(i + 1):
-                                                      (i + day), 'preclose']
+                    temp = 1 - hsma0.loc[(i + 1):
+                                         (i + day), 'open'] / hsma0.loc[
+                                             (i + 1):(i + day), 'preclose']
                     rlist[temp > lr] = 0
                     r = rlist.sum()
                     bestp_r.append(r)
@@ -468,27 +469,26 @@ class Future():
                     #p的取值范围：list(np.arange(0.002, 0.022, 0.002))
                     p = (j + 1) * self.minp
                     #做多
-                    rlist = hsma0.loc[(i + 1):(i + day), 'close'] / (
-                        hsma0.loc[(i + 1):(i + day), 'open'] *
-                        (1 + p)) - 1 - fee
+                    rlist = hsma0.loc[(i + 1):(i + day), 'close'] / (hsma0.loc[
+                        (i + 1):(i + day), 'open'] * (1 + p)) - 1 - fee
                     #止盈，收益上限
-                    temp = hsma0.loc[(i + 1):(i + day), 'high'] / hsma0.loc[(
-                        i + 1):(i + day), 'open'] - 1
+                    temp = hsma0.loc[(i + 1):(i + day), 'high'] / hsma0.loc[
+                        (i + 1):(i + day), 'open'] - 1
                     rlist[temp < p] = 0
                     #开盘波动太大，不交易
-                    temp = hsma0.loc[(i + 1):(i + day), 'open'] / hsma0.loc[(
-                        i + 1):(i + day), 'preclose'] - 1
+                    temp = hsma0.loc[(i + 1):(i + day), 'open'] / hsma0.loc[
+                        (i + 1):(i + day), 'preclose'] - 1
                     rlist[temp > lr] = 0
                     r = rlist.sum()
                     bestp_r.append(r)
                 hsma0.loc[i, 'bestp_long'] = bestp_r.index(max(bestp_r))
                 hsma0.loc[i, 'bestp_long_r'] = max(bestp_r)
 
-            hsma0 = hsma0.loc[
-                (hsma0.bestp_short != -1) & (hsma0.bestp_long != -1), [
-                    'code', 'date', 'bestp_short', 'bestp_short_r',
-                    'bestp_long', 'bestp_long_r'
-                ]]
+            hsma0 = hsma0.loc[(hsma0.bestp_short != -1) &
+                              (hsma0.bestp_long != -1), [
+                                  'code', 'date', 'bestp_short',
+                                  'bestp_short_r', 'bestp_long', 'bestp_long_r'
+                              ]]
             hsmadata = pd.concat([hsmadata, hsma0], ignore_index=True)
 
         return hsmadata
@@ -504,8 +504,8 @@ class Future():
 
             hsma0 = hsma0.dropna()
 
-            hsmadata = pd.concat(
-                [hsmadata, hsma0[['code', 'date', 'ratio']]], ignore_index=True)
+            hsmadata = pd.concat([hsmadata, hsma0[['code', 'date', 'ratio']]],
+                                 ignore_index=True)
 
         return hsmadata
 
@@ -516,12 +516,13 @@ class Future():
             hsma0 = self.hsmaall[self.hsmaall.code == code].copy()
             hsma0.index = range(0, hsma0.shape[0])
 
-            hsma0['ratio'] = hsma0.open.shift(-day-1) / hsma0.open.shift(-1)- 1
+            hsma0['ratio'] = hsma0.open.shift(-day -
+                                              1) / hsma0.open.shift(-1) - 1
 
             hsma0 = hsma0.dropna()
 
-            hsmadata = pd.concat(
-                [hsmadata, hsma0[['code', 'date', 'ratio']]], ignore_index=True)
+            hsmadata = pd.concat([hsmadata, hsma0[['code', 'date', 'ratio']]],
+                                 ignore_index=True)
 
         return hsmadata
 
@@ -531,11 +532,14 @@ class Future():
         for code in self.feelist.keys():
             hsma0 = self.hsmaall[self.hsmaall.code == code].copy()
             hsma0.index = range(0, hsma0.shape[0])
-            hsma0['std'] = talib.STDDEV(hsma0.close.values, timeperiod=day, nbdev=1) / hsma0.close
+            hsma0['std'] = talib.STDDEV(
+                hsma0.close.values, timeperiod=day, nbdev=1) / hsma0.close
             hsma0['std_day'] = hsma0['std'].shift(-day)
 
             hsma0.dropna(inplace=True)
-            hsmadata = pd.concat([hsmadata, hsma0[['code', 'date', 'std_day']]], ignore_index=True)
+            hsmadata = pd.concat(
+                [hsmadata, hsma0[['code', 'date', 'std_day']]],
+                ignore_index=True)
 
         return hsmadata
 
@@ -544,7 +548,8 @@ class Future():
         hsmadata = pd.DataFrame()
         for code in self.feelist.keys():
             hsma0 = self.hsmaall[self.hsmaall.code == code].copy()
-            hsma0['std'] = talib.STDDEV(hsma0.close.values, timeperiod=day, nbdev=1)
+            hsma0['std'] = talib.STDDEV(
+                hsma0.close.values, timeperiod=day, nbdev=1)
             hsma0['std'] = hsma0['std'].shift(1)
             hsma0.dropna(inplace=True)
             hsma0.index = range(0, hsma0.shape[0])
@@ -560,35 +565,41 @@ class Future():
             for i in range(0, hsma0.shape[0] - day):
                 #做空
                 rlist = 1 - hsma0.loc[(i + 1):(i + day), 'nextopen'] / (
-                    hsma0.loc[(i + 1):(i + day), 'open'] -  v * hsma0.loc[(i + 1):(i + day), 'std']) - fee
+                    hsma0.loc[(i + 1):(i + day), 'open'] - v * hsma0.loc[
+                        (i + 1):(i + day), 'std']) - fee
                 #波动不足，不交易
-                temp = hsma0.loc[(i + 1):(i + day), 'low'] > (hsma0.loc[(i + 1):(i + day), 'open'] -  v * hsma0.loc[(i + 1):(i + day), 'std'])
+                temp = hsma0.loc[(i + 1):(i + day), 'low'] > (
+                    hsma0.loc[(i + 1):(i + day), 'open'] - v * hsma0.loc[
+                        (i + 1):(i + day), 'std'])
                 rlist[temp] = 0
                 #开盘波动太大，不交易
-                temp = 1 - hsma0.loc[(i + 1):(i + day), 'open'] / hsma0.loc[(
-                    i + 1):(i + day), 'preclose']
+                temp = 1 - hsma0.loc[(i + 1):(i + day), 'open'] / hsma0.loc[
+                    (i + 1):(i + day), 'preclose']
                 rlist[temp > lr] = 0
                 hsma0.loc[i, 'short_r'] = rlist.sum()
             #做多
             for i in range(0, hsma0.shape[0] - day):
                 #做多
-                rlist = hsma0.loc[(i + 1):(i + day), 'nextopen'] / (
-                    hsma0.loc[(i + 1):(i + day), 'open'] +  v * hsma0.loc[(i + 1):(i + day), 'std']) - 1 - fee
+                rlist = hsma0.loc[(i + 1):(i + day), 'nextopen'] / (hsma0.loc[
+                    (i + 1):(i + day), 'open'] + v * hsma0.loc[
+                        (i + 1):(i + day), 'std']) - 1 - fee
                 #止盈，收益上限
-                temp = hsma0.loc[(i + 1):(i + day), 'high'] < (hsma0.loc[(i + 1):(i + day), 'open'] +  v * hsma0.loc[(i + 1):(i + day), 'std'])
+                temp = hsma0.loc[(i + 1):(i + day), 'high'] < (
+                    hsma0.loc[(i + 1):(i + day), 'open'] + v * hsma0.loc[
+                        (i + 1):(i + day), 'std'])
                 rlist[temp] = 0
                 #开盘波动太大，不交易
-                temp = hsma0.loc[(i + 1):(i + day), 'open'] / hsma0.loc[(
-                    i + 1):(i + day), 'preclose'] - 1
+                temp = hsma0.loc[(i + 1):(i + day), 'open'] / hsma0.loc[
+                    (i + 1):(i + day), 'preclose'] - 1
                 rlist[temp > lr] = 0
                 hsma0.loc[i, 'long_r'] = rlist.sum()
 
-            hsma0 = hsma0.loc[(hsma0.short_r != -1) & (hsma0.long_r != -1),
-                              ['code', 'date', 'short_r', 'long_r']]
+            hsma0 = hsma0.loc[(hsma0.short_r != -1) & (
+                hsma0.long_r != -1), ['code', 'date', 'short_r', 'long_r']]
             hsmadata = pd.concat([hsmadata, hsma0], ignore_index=True)
 
         return hsmadata
-        
+
     def hsmadata_fixp(self, day, p, lr):  #双向交易，多空不同的p
 
         hsmadata = pd.DataFrame()
@@ -609,31 +620,31 @@ class Future():
                 rlist = 1 - hsma0.loc[(i + 1):(i + day), 'nextopen'] / (
                     hsma0.loc[(i + 1):(i + day), 'open'] * (1 - p)) - fee
                 #波动不足，不交易
-                temp = 1 - hsma0.loc[(i + 1):(i + day), 'low'] / hsma0.loc[(
-                    i + 1):(i + day), 'open']
+                temp = 1 - hsma0.loc[(i + 1):(i + day), 'low'] / hsma0.loc[
+                    (i + 1):(i + day), 'open']
                 rlist[temp < p] = 0
                 #开盘波动太大，不交易
-                temp = 1 - hsma0.loc[(i + 1):(i + day), 'open'] / hsma0.loc[(
-                    i + 1):(i + day), 'preclose']
+                temp = 1 - hsma0.loc[(i + 1):(i + day), 'open'] / hsma0.loc[
+                    (i + 1):(i + day), 'preclose']
                 rlist[temp > lr] = 0
                 hsma0.loc[i, 'short_r'] = rlist.sum()
             #做多
             for i in range(0, hsma0.shape[0] - day):
                 #做多
-                rlist = hsma0.loc[(i + 1):(i + day), 'nextopen'] / (
-                    hsma0.loc[(i + 1):(i + day), 'open'] * (1 + p)) - 1 - fee
+                rlist = hsma0.loc[(i + 1):(i + day), 'nextopen'] / (hsma0.loc[
+                    (i + 1):(i + day), 'open'] * (1 + p)) - 1 - fee
                 #止盈，收益上限
-                temp = hsma0.loc[(i + 1):(i + day), 'high'] / hsma0.loc[(
-                    i + 1):(i + day), 'open'] - 1
+                temp = hsma0.loc[(i + 1):(i + day), 'high'] / hsma0.loc[
+                    (i + 1):(i + day), 'open'] - 1
                 rlist[temp < p] = 0
                 #开盘波动太大，不交易
-                temp = hsma0.loc[(i + 1):(i + day), 'open'] / hsma0.loc[(
-                    i + 1):(i + day), 'preclose'] - 1
+                temp = hsma0.loc[(i + 1):(i + day), 'open'] / hsma0.loc[
+                    (i + 1):(i + day), 'preclose'] - 1
                 rlist[temp > lr] = 0
                 hsma0.loc[i, 'long_r'] = rlist.sum()
 
-            hsma0 = hsma0.loc[(hsma0.short_r != -1) & (hsma0.long_r != -1),
-                              ['code', 'date', 'short_r', 'long_r']]
+            hsma0 = hsma0.loc[(hsma0.short_r != -1) & (
+                hsma0.long_r != -1), ['code', 'date', 'short_r', 'long_r']]
             hsmadata = pd.concat([hsmadata, hsma0], ignore_index=True)
 
         return hsmadata
@@ -704,13 +715,13 @@ class Future():
                     rlist = 1 - hsma0.loc[(i + 1):(i + day), 'close'] / (
                         hsma0.loc[(i + 1):(i + day), 'open'] * (1 - p)) - fee
                     #波动不足，不交易
-                    temp = 1 - hsma0.loc[(i + 1):(
-                        i + day), 'low'] / hsma0.loc[(i + 1):(i + day), 'open']
+                    temp = 1 - hsma0.loc[(i + 1):(i + day), 'low'] / hsma0.loc[
+                        (i + 1):(i + day), 'open']
                     rlist[temp < p] = 0
                     #开盘波动太大，不交易
-                    temp = 1 - hsma0.loc[(i + 1):(
-                        i + day), 'open'] / hsma0.loc[(i + 1):
-                                                      (i + day), 'preclose']
+                    temp = 1 - hsma0.loc[(i + 1):
+                                         (i + day), 'open'] / hsma0.loc[
+                                             (i + 1):(i + day), 'preclose']
                     rlist[temp > lr] = 0
                     r = rlist.sum()
                     bestp_r.append(r)
@@ -722,27 +733,26 @@ class Future():
                 bestp_r = list()
                 for p in plist:
                     #做多
-                    rlist = hsma0.loc[(i + 1):(i + day), 'close'] / (
-                        hsma0.loc[(i + 1):(i + day), 'open'] *
-                        (1 + p)) - 1 - fee
+                    rlist = hsma0.loc[(i + 1):(i + day), 'close'] / (hsma0.loc[
+                        (i + 1):(i + day), 'open'] * (1 + p)) - 1 - fee
                     #止盈，收益上限
-                    temp = hsma0.loc[(i + 1):(i + day), 'high'] / hsma0.loc[(
-                        i + 1):(i + day), 'open'] - 1
+                    temp = hsma0.loc[(i + 1):(i + day), 'high'] / hsma0.loc[
+                        (i + 1):(i + day), 'open'] - 1
                     rlist[temp < p] = 0
                     #开盘波动太大，不交易
-                    temp = hsma0.loc[(i + 1):(i + day), 'open'] / hsma0.loc[(
-                        i + 1):(i + day), 'preclose'] - 1
+                    temp = hsma0.loc[(i + 1):(i + day), 'open'] / hsma0.loc[
+                        (i + 1):(i + day), 'preclose'] - 1
                     rlist[temp > lr] = 0
                     r = rlist.sum()
                     bestp_r.append(r)
                 hsma0.loc[i, 'bestp_long'] = plist[bestp_r.index(max(bestp_r))]
                 hsma0.loc[i, 'bestp_long_r'] = max(bestp_r)
 
-            hsma0 = hsma0.loc[
-                (hsma0.bestp_short != -1) & (hsma0.bestp_long != -1), [
-                    'code', 'date', 'bestp_short', 'bestp_short_r',
-                    'bestp_long', 'bestp_long_r'
-                ]]
+            hsma0 = hsma0.loc[(hsma0.bestp_short != -1) &
+                              (hsma0.bestp_long != -1), [
+                                  'code', 'date', 'bestp_short',
+                                  'bestp_short_r', 'bestp_long', 'bestp_long_r'
+                              ]]
             hsmadata = pd.concat([hsmadata, hsma0], ignore_index=True)
 
         return hsmadata
@@ -752,16 +762,18 @@ class Future():
         hsmadata_y = pd.DataFrame()
         for code in self.feelist.keys():
             hsma0 = self.hsmaall[self.hsmaall.code == code]
-    
+
             hsmadata = hsma0[[
                 'date',
                 'code',
             ]].copy()
             hsmadata['ratio'] = hsma0['close'].shift(-day) / hsma0['close'] - 1
-    
+            hsmadata['oratio'] = hsma0['close'].shift(-day) / hsma0[
+                    'open'].shift(-1) - 1
+
             hsmadata = hsmadata.dropna()
 
-        hsmadata_y = pd.concat([hsmadata_y, hsmadata], ignore_index=True)
+            hsmadata_y = pd.concat([hsmadata_y, hsmadata], ignore_index=True)
 
         return hsmadata_y
 
@@ -830,8 +842,8 @@ class Future():
 
         hsmadata = hsmadata.dropna()
 
-        return hsmadata    
-    
+        return hsmadata
+
     def hsmadata_daycode_lsp(self, hsma, day, fee):
         hsma['r'] = 0
         tradelong = (hsma.pred_long == 1) & (hsma.pred_short == 0)
@@ -844,7 +856,7 @@ class Future():
         hsmaratio['date'] = hsmaratio.index
         hsmaratio.index = range(0, hsmaratio.shape[0])
         hsmaratio['ratio'] = hsmaratio['dayratio'].cumsum()
-        
+
         return hsmaratio
 
     def hsmadata_daycode_lsr(self, hsma, day, pr=0.5, fee=0.0004):
@@ -859,11 +871,11 @@ class Future():
         hsmaratio['date'] = hsmaratio.index
         hsmaratio.index = range(0, hsmaratio.shape[0])
         hsmaratio['ratio'] = hsmaratio['dayratio'].cumsum()
-        
+
         return hsmaratio
-    
+
     def hsmadata_dayin_lsr(self, hsma, pr=0.5, lr=0.01, sr=0.01, fee=0.0004):
-      
+
         hsmaall = pd.DataFrame()
         for code in hsma.code.unique():
             hsma0 = hsma[hsma.code == code].copy()
@@ -871,13 +883,17 @@ class Future():
             hsma1 = self.hsmaall[self.hsmaall.code == code].copy()
             hsma2 = pd.merge(hsma0, hsma1)
             hsma2['r1'] = 0
-            temp = (hsma2.prob_long > pr) & (hsma2.high/hsma2.open - 1 >= lr)
-            hsma2.loc[temp, 'r1'] = hsma2.loc[temp, 'nextopen'] / (hsma2.loc[temp, 'open']*(1+lr)) - 1 - fee
+            temp = (hsma2.prob_long > pr) & (hsma2.high / hsma2.open - 1 >= lr)
+            hsma2.loc[temp, 'r1'] = hsma2.loc[temp, 'nextopen'] / (
+                hsma2.loc[temp, 'open'] * (1 + lr)) - 1 - fee
             hsma2['r2'] = 0
-            temp = (hsma2.prob_short > pr) & (hsma2.low/hsma2.open - 1 <= -sr)
-            hsma2.loc[temp, 'r2'] = 1 - hsma2.loc[temp, 'nextopen'] / (hsma2.loc[temp, 'open']*(1-lr)) - fee
+            temp = (hsma2.prob_short > pr) & (hsma2.low / hsma2.open - 1 <=
+                                              -sr)
+            hsma2.loc[temp, 'r2'] = 1 - hsma2.loc[temp, 'nextopen'] / (
+                hsma2.loc[temp, 'open'] * (1 - lr)) - fee
             hsma2['r'] = hsma2['r1'] + hsma2['r2']
-            hsma2 = hsma2.loc[((hsma2.r1 != 0) | (hsma2.r2 != 0)), ['code', 'date', 'r']]
+            hsma2 = hsma2.loc[((hsma2.r1 != 0) |
+                               (hsma2.r2 != 0)), ['code', 'date', 'r']]
             hsmaall = pd.concat([hsmaall, hsma2], ignore_index=True)
         hsmaratio = pd.DataFrame(hsmaall.groupby(['date'])['r'].sum())
         hsmaratio.columns = ['dayratio']
@@ -886,14 +902,16 @@ class Future():
         temp.columns = ['tradecount']
         temp['date'] = temp.index
         hsmaratio = pd.merge(hsmaratio, temp)
-        datelist = pd.DataFrame({'date':pd.Series(hsma['date'].unique()).sort_values()})
+        datelist = pd.DataFrame({
+            'date':
+            pd.Series(hsma['date'].unique()).sort_values()
+        })
         hsmaratio = pd.merge(datelist, hsmaratio, how='left')
         hsmaratio.fillna(0, inplace=True)
         hsmaratio.index = range(0, hsmaratio.shape[0])
-        hsmaratio['ratio'] = hsmaratio['dayratio'].cumsum()         
-        
-        return hsmaratio
+        hsmaratio['ratio'] = hsmaratio['dayratio'].cumsum()
 
+        return hsmaratio
 
     def hsmadata_predp_r(self, hsma, lr):  #
 
@@ -909,8 +927,8 @@ class Future():
                     hsma0.shape[0] - 1, 'close']
             else:
                 fee = self.feelist[code]
-            hsma0.predp = (hsma0.predp + 1) * self. minp
-            
+            hsma0.predp = (hsma0.predp + 1) * self.minp
+
             #做空
             dayratio0 = 1 - hsma0['close'] / (hsma0['open'] *
                                               (1 - hsma0.predp)) - fee
@@ -943,7 +961,7 @@ class Future():
         portfolio['ratio'] = portfolio['dayratio'].cumsum()
 
         return hsmaratio, portfolio
-        
+
     def hsmadata_predp2ma_r(self, hsma, l, lr):  #
 
         hsmaall = pd.merge(self.hsmaall, hsma)
@@ -1064,8 +1082,8 @@ class Future():
             hsmad = pd.concat(
                 [code_long.iloc[0:ncode, ], code_short.iloc[0:ncode, ]],
                 ignore_index=True)
-            portfolio_all = pd.concat(
-                [portfolio_all, hsmad], ignore_index=True)
+            portfolio_all = pd.concat([portfolio_all, hsmad],
+                                      ignore_index=True)
 
             portfoliod = pd.DataFrame()
             for i in hsmad.index:
@@ -1149,7 +1167,8 @@ class Future():
                 hsma0['lowd'] = talib.MAX(
                     hsma0.low.shift(1).values, timeperiod=length)
                 hsma0 = hsma0.dropna()
-                hsma0 = hsma0[(hsma0.date >= startdate) & (hsma0.date <= enddate)]
+                hsma0 = hsma0[(hsma0.date >= startdate)
+                              & (hsma0.date <= enddate)]
                 if hsma0.shape[0] == 0:
                     continue
                 if self.feelist[code] > 1:
@@ -1157,12 +1176,13 @@ class Future():
                         'close'].iloc[hsma0.shape[0] - 1]
                 else:
                     fee = self.feelist[code]
-                
+
                 #做空
                 dayratio0 = 1 - hsma0['nextopen'] / (hsma0['lowd']) - fee
                 #开盘价入场
                 temp = hsma0['open'] < hsma0['lowd']
-                dayratio0[temp] = 0#1 - hsma0.loc[temp, 'nextopen'] / hsma0.loc[temp, 'open'] - fee
+                dayratio0[
+                    temp] = 0  #1 - hsma0.loc[temp, 'nextopen'] / hsma0.loc[temp, 'open'] - fee
                 temp = hsma0.low > hsma0.lowd
                 dayratio0[temp] = 0
                 temp = 1 - hsma0.open / hsma0.preclose > lr
@@ -1171,7 +1191,8 @@ class Future():
                 dayratio1 = hsma0['nextopen'] / (hsma0['highd']) - 1 - fee
                 #开盘价入场
                 temp = hsma0['open'] > hsma0['highd']
-                dayratio1[temp] = 0#hsma0.loc[temp, 'nextopen'] / hsma0.loc[temp, 'open'] - 1 - fee
+                dayratio1[
+                    temp] = 0  #hsma0.loc[temp, 'nextopen'] / hsma0.loc[temp, 'open'] - 1 - fee
                 temp = hsma0.high < hsma0.highd
                 dayratio1[temp] = 0
                 temp = hsma0.open / hsma0.preclose - 1 > lr
@@ -1199,7 +1220,7 @@ class Future():
         portfolio['dayratio'] = portfolio.iloc[:, 1:portfolio.shape[1]].mean(
             axis=1)
         portfolio['ratio'] = portfolio['dayratio'].cumsum()
-            
+
         return portfolio
 
     def hsmadata_fixminpoint_r(self, hsma, ncode, mp, lr):  #
@@ -1216,7 +1237,8 @@ class Future():
                 startdate = hsmad.loc[i, 'startdate']
                 enddate = hsmad.loc[i, 'enddate']
                 hsma0 = self.hsmaall[(self.hsmaall.code == code)].copy()
-                hsma0 = hsma0[(hsma0.date >= startdate) & (hsma0.date <= enddate)].copy()
+                hsma0 = hsma0[(hsma0.date >= startdate)
+                              & (hsma0.date <= enddate)].copy()
                 if hsma0.shape[0] == 0:
                     continue
                 if self.feelist[code] > 1:
@@ -1225,14 +1247,18 @@ class Future():
                 else:
                     fee = self.feelist[code]
                 #做空
-                dayratio0 = 1 - hsma0['nextopen'] / (hsma0['open'] -  mp * self.minpoint[code]) - fee
-                temp = hsma0['low'] > (hsma0['open'] -  mp * self.minpoint[code])
+                dayratio0 = 1 - hsma0['nextopen'] / (
+                    hsma0['open'] - mp * self.minpoint[code]) - fee
+                temp = hsma0['low'] > (
+                    hsma0['open'] - mp * self.minpoint[code])
                 dayratio0[temp] = 0
                 temp = 1 - hsma0.open / hsma0.preclose > lr
                 dayratio0[temp] = 0
                 #做多
-                dayratio1 = hsma0['nextopen'] / (hsma0['open'] +  mp * self.minpoint[code]) - 1 - fee
-                temp = hsma0['high'] < (hsma0['open'] +  mp * self.minpoint[code])
+                dayratio1 = hsma0['nextopen'] / (
+                    hsma0['open'] + mp * self.minpoint[code]) - 1 - fee
+                temp = hsma0['high'] < (
+                    hsma0['open'] + mp * self.minpoint[code])
                 dayratio1[temp] = 0
                 temp = hsma0.open / hsma0.preclose - 1 > lr
                 dayratio1[temp] = 0
@@ -1261,7 +1287,7 @@ class Future():
         portfolio['ratio'] = portfolio['dayratio'].cumsum()
 
         return portfolio
-        
+
     def hsmadata_fixvar_r(self, hsma, day, ncode, v, lr):  #
 
         portfolio = pd.DataFrame()
@@ -1276,10 +1302,12 @@ class Future():
                 startdate = hsmad.loc[i, 'startdate']
                 enddate = hsmad.loc[i, 'enddate']
                 hsma0 = self.hsmaall[(self.hsmaall.code == code)].copy()
-                hsma0['std'] = talib.STDDEV(hsma0.close.values, timeperiod=day, nbdev=1)
+                hsma0['std'] = talib.STDDEV(
+                    hsma0.close.values, timeperiod=day, nbdev=1)
                 hsma0['std'] = hsma0['std'].shift(1)
                 hsma0.dropna(inplace=True)
-                hsma0 = hsma0[(hsma0.date >= startdate) & (hsma0.date <= enddate)].copy()
+                hsma0 = hsma0[(hsma0.date >= startdate)
+                              & (hsma0.date <= enddate)].copy()
                 if hsma0.shape[0] == 0:
                     continue
                 if self.feelist[code] > 1:
@@ -1288,14 +1316,16 @@ class Future():
                 else:
                     fee = self.feelist[code]
                 #做空
-                dayratio0 = 1 - hsma0['nextopen'] / (hsma0['open'] -  v * hsma0['std']) - fee
-                temp = hsma0['low'] > (hsma0['open'] -  v * hsma0['std'])
+                dayratio0 = 1 - hsma0['nextopen'] / (
+                    hsma0['open'] - v * hsma0['std']) - fee
+                temp = hsma0['low'] > (hsma0['open'] - v * hsma0['std'])
                 dayratio0[temp] = 0
                 temp = 1 - hsma0.open / hsma0.preclose > lr
                 dayratio0[temp] = 0
                 #做多
-                dayratio1 = hsma0['nextopen'] / (hsma0['open'] +  v * hsma0['std']) - 1 - fee
-                temp = hsma0['high'] < (hsma0['open'] +  v * hsma0['std'])
+                dayratio1 = hsma0['nextopen'] / (
+                    hsma0['open'] + v * hsma0['std']) - 1 - fee
+                temp = hsma0['high'] < (hsma0['open'] + v * hsma0['std'])
                 dayratio1[temp] = 0
                 temp = hsma0.open / hsma0.preclose - 1 > lr
                 dayratio1[temp] = 0
@@ -1324,7 +1354,7 @@ class Future():
         portfolio['ratio'] = portfolio['dayratio'].cumsum()
 
         return portfolio
-        
+
     def hsmadata_fixp_r(self, hsma, ncode, p, lr):  #
 
         portfolio = pd.DataFrame()
@@ -1389,7 +1419,7 @@ class Future():
         return portfolio
 
     def filterrules(self, hsma, rule, n):
-        
+
         if rule == None:
             return hsma
         elif rule == 'STD_15':
@@ -1399,8 +1429,8 @@ class Future():
                 temp = hsma[hsma.date == d].copy()
                 temp.sort_values(by='STD_15', ascending=False, inplace=True)
                 temp = temp.iloc[0:n, ]
-                hsmafilter = pd.concat([hsmafilter,temp], ignore_index=True)
-            
+                hsmafilter = pd.concat([hsmafilter, temp], ignore_index=True)
+
             return hsmafilter
 
     def tradestat_portfolio(self, portfolio):
@@ -1435,8 +1465,8 @@ class Future():
         tradestat['mdddate'] = mdddate
         tradestat['RRR'] = tradestat['yearratio'] / tradestat['mdd']
 
-        tradestat['sharpratio'] = portfolio['dayratio'].mean() / portfolio[
-            'dayratio'].std() * 252**0.5
+        tradestat['sharpratio'] = portfolio['dayratio'].mean(
+        ) / portfolio['dayratio'].std() * 252**0.5
 
         print(tradestat)
 
@@ -1449,8 +1479,8 @@ class Future():
         for d in dates:
             temp = traindata[traindata['date'] == d].copy()
             temp['rank'] = temp[col].rank(ascending=ascending)
-            traindatac = pd.concat(
-                [traindatac, temp[temp['rank'] <= tn]], ignore_index=True)
+            traindatac = pd.concat([traindatac, temp[temp['rank'] <= tn]],
+                                   ignore_index=True)
 
         return (traindatac)
 
@@ -1473,8 +1503,8 @@ class Future():
             if hsmad.shape[0] == 0:
                 continue
             hsmad['rank'] = hsmad['predratio'].rank(ascending=False)
-            hsmatrade = pd.concat(
-                [hsmatrade, hsmad[hsmad['rank'] <= n]], ignore_index=True)
+            hsmatrade = pd.concat([hsmatrade, hsmad[hsmad['rank'] <= n]],
+                                  ignore_index=True)
 
         if not self.absratio:
             hsmatrade = pd.merge(hsmatrade, self.ratio_mean)
@@ -1494,9 +1524,8 @@ class Future():
 
         hsmatrade['dayratio'] = hsma['ratio']
 
-        hsmatrade.ix[
-            hsmatrade['predratio'] < 0,
-            'dayratio'] = -hsmatrade.ix[hsmatrade['predratio'] < 0, 'ratio']
+        hsmatrade.ix[hsmatrade['predratio'] < 0, 'dayratio'] = -hsmatrade.ix[
+            hsmatrade['predratio'] < 0, 'ratio']
 
         hsmatrade['dayratio'] = hsmatrade['dayratio'] - self.fee
 
@@ -1510,22 +1539,21 @@ class Future():
 
     def hsmatraderegressor_r(self, hsma, day, r, fee=0.0004):
 
-        hsmatrade = hsma.loc[(hsma['predratio'] > r*day) | 
-                         (hsma['predratio'] < -r*day),
-                         ['date', 'code', 'ratio', 'predratio']].copy()
+        hsmatrade = hsma.loc[(hsma['predratio'] > r * day) |
+                             (hsma['predratio'] < -r * day),
+                             ['date', 'code', 'ratio', 'predratio']].copy()
 
         hsmatrade['r'] = hsma['ratio']
 
-        hsmatrade.loc[hsmatrade['predratio'] < 0, 
-                      'r'] = -hsmatrade.loc[hsmatrade['predratio'] < 0, 
-                                                 'ratio']
+        hsmatrade.loc[hsmatrade['predratio'] < 0, 'r'] = -hsmatrade.loc[
+            hsmatrade['predratio'] < 0, 'ratio']
 
         hsmatrade['r'] = hsmatrade['r'] - fee
 
         hsmaratio = pd.DataFrame(hsmatrade.groupby(['date'])['r'].mean()) / day
         hsmaratio.columns = ['dayratio']
         hsmaratio['date'] = hsmaratio.index
-        hsmaratio.sort_values(by='date',inplace=True)
+        hsmaratio.sort_values(by='date', inplace=True)
         hsmaratio.index = range(0, hsmaratio.shape[0])
         hsmaratio['ratio'] = hsmaratio['dayratio'].cumsum()
 
@@ -1556,8 +1584,8 @@ class Future():
 
         hsmatradec = self.hsmatradeclassifier(condition, hsma)
 
-        hsmatradeday = hsmatradec.groupby(
-            ['date'], as_index=False)[['ratio']].mean()
+        hsmatradeday = hsmatradec.groupby(['date'],
+                                          as_index=False)[['ratio']].mean()
         number = hsmatradec.groupby(['date'], as_index=False)[['ratio']].size()
         number.index = range(len(number))
         hsmatradeday['number'] = number
@@ -1598,8 +1626,8 @@ class Future():
 
         hsmai = hsmaindex.copy()
         hsmai['dayratio'] = hsmai['ratio']
-        hsmai.ix[hsmai.predratio == 0,
-                 'dayratio'] = -hsmai.ix[hsmai.predratio == 0, 'dayratio']
+        hsmai.ix[hsmai.predratio ==
+                 0, 'dayratio'] = -hsmai.ix[hsmai.predratio == 0, 'dayratio']
         hsmai['dayratio'] = (hsmai['dayratio'] - self.indexfee) / self.day
         hsmai['cumratio'] = hsmai['dayratio'].cumsum()
 
@@ -1609,8 +1637,8 @@ class Future():
 
         hsmai = hsmaindex.copy()
         hsmai['dayratio'] = hsmai['ratio']
-        hsmai.ix[hsmai.predratio == 0,
-                 'dayratio'] = -hsmai.ix[hsmai.predratio == 0, 'dayratio']
+        hsmai.ix[hsmai.predratio ==
+                 0, 'dayratio'] = -hsmai.ix[hsmai.predratio == 0, 'dayratio']
         hsmai.ix[hsmai.predratio == 1, 'dayratio'] = 0
         hsmai['dayratio'] = (hsmai['dayratio'] - self.indexfee) / self.day
         hsmai['cumratio'] = hsmai['dayratio'].cumsum()
@@ -1630,13 +1658,12 @@ class Future():
                         & (hsma['date'] < dates[(i + 1) * testlen])].copy()
             temp1 = temp[temp.predratio == 1]
 
-            table = pd.DataFrame(
-                {
-                    'i': i,
-                    'startdate': [dates[i * testlen]],
-                    'enddate': [dates[(i + 1) * testlen]]
-                },
-                columns=['i', 'startdate', 'enddate'])
+            table = pd.DataFrame({
+                'i': i,
+                'startdate': [dates[i * testlen]],
+                'enddate': [dates[(i + 1) * testlen]]
+            },
+                                 columns=['i', 'startdate', 'enddate'])
             table['meanratio_all'] = temp.ratio.mean()
             table['meanratio_pred'] = temp1.ratio.mean()
             table['number_pred'] = temp1.shape[0]
@@ -1651,8 +1678,8 @@ class Future():
 
         tradestat = self.tradestat(hsmatradeday)
         tradestat['Hedge'] = 'NoHedge'
-        tradestatlist = pd.concat(
-            [tradestatlist, tradestat], ignore_index=True)
+        tradestatlist = pd.concat([tradestatlist, tradestat],
+                                  ignore_index=True)
 
         temp = hsmatradeday[['date', 'hedge300dayratio', 'hedge300ratio']]
         temp = temp.rename(columns={
@@ -1661,8 +1688,8 @@ class Future():
         })
         tradestat = self.tradestat(temp)
         tradestat['Hedge'] = 'Hedge300'
-        tradestatlist = pd.concat(
-            [tradestatlist, tradestat], ignore_index=True)
+        tradestatlist = pd.concat([tradestatlist, tradestat],
+                                  ignore_index=True)
 
         temp = hsmatradeday[['date', 'hedge500dayratio', 'hedge500ratio']]
         temp = temp.rename(columns={
@@ -1671,8 +1698,8 @@ class Future():
         })
         tradestat = self.tradestat(temp)
         tradestat['Hedge'] = 'Hedge500'
-        tradestatlist = pd.concat(
-            [tradestatlist, tradestat], ignore_index=True)
+        tradestatlist = pd.concat([tradestatlist, tradestat],
+                                  ignore_index=True)
 
         if any(hsmatradeday.columns == 'hedgecta1ratio'):
             temp = hsmatradeday[[
@@ -1684,8 +1711,8 @@ class Future():
             })
             tradestat = self.tradestat(temp)
             tradestat['Hedge'] = 'HedgeCTA1'
-            tradestatlist = pd.concat(
-                [tradestatlist, tradestat], ignore_index=True)
+            tradestatlist = pd.concat([tradestatlist, tradestat],
+                                      ignore_index=True)
 
         print(tradestatlist)
         tradestatlist.to_csv(

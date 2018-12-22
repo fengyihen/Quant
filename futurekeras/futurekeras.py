@@ -53,13 +53,13 @@ class FutureKeras(FutureDay.Future):
                                   '\\' + code + '.npy'):
                 continue
             print(code)
-            xy_train = np.load(path + str(timesteps) + '_' + self.label + '\\'
-                               + code + '.npy')
+            xy_train = np.load(path + str(timesteps) + '_' + self.label +
+                               '\\' + code + '.npy')
             x_temp = xy_train[(xy_train[:, timesteps - 1, 0] >= traindate0) & (
                 xy_train[:, timesteps - 1, 0] <= traindate1), :, 3:]
             y_temp = xy_train[(xy_train[:, timesteps - 1, 0] >= traindate0) &
-                              (xy_train[:, timesteps - 1, 0] <=
-                               traindate1), timesteps - 1, 0:3]
+                              (xy_train[:, timesteps - 1, 0] <= traindate1
+                               ), timesteps - 1, 0:3]
 
             if flag == 0:
                 x_train = x_temp
@@ -168,15 +168,15 @@ class FutureKeras(FutureDay.Future):
                 (hsmadata['date'] >= dates[(i - ntrain) * testlen])
                 & (hsmadata['date'] <= dates[i * testlen - day])].copy()
             testdata = hsmadata[(hsmadata['date'] >= dates[i * testlen])
-                                & (hsmadata['date'] <=
-                                   dates[(i + 1) * testlen])].copy()
+                                & (hsmadata['date'] <= dates[
+                                    (i + 1) * testlen])].copy()
             print(testdata.date.max())
 
             ###选取盈利潜力最大的10个品种训练并预测
-            traindata[
-                'bestp_r'] = traindata['bestp_short_r'] + traindata['bestp_long_r']
-            selectcode = traindata.groupby(
-                ['code'], as_index=False)[['bestp_r']].mean()
+            traindata['bestp_r'] = traindata['bestp_short_r'] + traindata[
+                'bestp_long_r']
+            selectcode = traindata.groupby(['code'],
+                                           as_index=False)[['bestp_r']].mean()
             selectcode.sort_values(by='bestp_r', ascending=False, inplace=True)
             selectcode = pd.DataFrame({'code': selectcode.code.iloc[0:ncode]})
             traindata = pd.merge(traindata, selectcode)
@@ -199,12 +199,11 @@ class FutureKeras(FutureDay.Future):
                 hsma = testdata[['code', 'date', 'predp_short',
                                  'predp_long']].copy()
             else:
-                hsma = pd.concat(
-                    [
-                        hsma,
-                        testdata[['code', 'date', 'predp_short', 'predp_long']]
-                    ],
-                    ignore_index=True)
+                hsma = pd.concat([
+                    hsma,
+                    testdata[['code', 'date', 'predp_short', 'predp_long']]
+                ],
+                                 ignore_index=True)
             #hsma = pd.read_hdf('Test\\stockkeras\\hsma_lstm_regression_' + self.label + '.h5', 'hsma')
 
         return (hsma)
@@ -224,13 +223,13 @@ class FutureKeras(FutureDay.Future):
                 (hsmadata['date'] >= dates[(i - ntrain) * testlen])
                 & (hsmadata['date'] <= dates[i * testlen - day])].copy()
             testdata = hsmadata[(hsmadata['date'] >= dates[i * testlen])
-                                & (hsmadata['date'] <=
-                                   dates[(i + 1) * testlen])].copy()
+                                & (hsmadata['date'] <= dates[
+                                    (i + 1) * testlen])].copy()
             print(testdata.date.max())
 
             ###选取盈利潜力最大的10个品种训练并预测
-            selectcode = traindata.groupby(
-                ['code'], as_index=False)[['bestp_r']].mean()
+            selectcode = traindata.groupby(['code'],
+                                           as_index=False)[['bestp_r']].mean()
             selectcode.sort_values(by='bestp_r', ascending=False, inplace=True)
             selectcode = pd.DataFrame({'code': selectcode.code.iloc[0:10]})
             traindata = pd.merge(traindata, selectcode)
@@ -285,12 +284,11 @@ class FutureKeras(FutureDay.Future):
                 hsma = testdata[['code', 'date', 'bestp', 'bestp_r',
                                  'predp']].copy()
             else:
-                hsma = pd.concat(
-                    [
-                        hsma,
-                        testdata[['code', 'date', 'bestp', 'bestp_r', 'predp']]
-                    ],
-                    ignore_index=True)
+                hsma = pd.concat([
+                    hsma,
+                    testdata[['code', 'date', 'bestp', 'bestp_r', 'predp']]
+                ],
+                                 ignore_index=True)
 
         #hsma.to_hdf('Test\\stockkeras\\hsma_dnn_regression_' + self.label + '.h5', 'hsma')
 
@@ -311,15 +309,15 @@ class FutureKeras(FutureDay.Future):
                 (hsmadata['date'] >= dates[(i - ntrain) * testlen])
                 & (hsmadata['date'] <= dates[i * testlen - day])].copy()
             testdata = hsmadata[(hsmadata['date'] >= dates[i * testlen])
-                                & (hsmadata['date'] <=
-                                   dates[(i + 1) * testlen])].copy()
+                                & (hsmadata['date'] <= dates[
+                                    (i + 1) * testlen])].copy()
             print(testdata.date.max())
 
             ###选取盈利潜力最大的10个品种训练并预测
-            traindata[
-                'bestp_r'] = traindata['bestp_short_r'] + traindata['bestp_long_r']
-            selectcode = traindata.groupby(
-                ['code'], as_index=False)[['bestp_r']].mean()
+            traindata['bestp_r'] = traindata['bestp_short_r'] + traindata[
+                'bestp_long_r']
+            selectcode = traindata.groupby(['code'],
+                                           as_index=False)[['bestp_r']].mean()
             selectcode.sort_values(by='bestp_r', ascending=False, inplace=True)
             selectcode = pd.DataFrame({'code': selectcode.code.iloc[0:10]})
             traindata = pd.merge(traindata, selectcode)
@@ -372,11 +370,11 @@ class FutureKeras(FutureDay.Future):
                   (endtime - starttime))
 
             for code in testdata.code.unique():
-                testdata.loc[testdata.code == code,
-                             'predp_short'] = testdata.loc[
+                testdata.loc[testdata.code ==
+                             code, 'predp_short'] = testdata.loc[
                                  testdata.code == code, 'predp_short'].iloc[0]
-                testdata.loc[testdata.code == code,
-                             'predp_long'] = testdata.loc[
+                testdata.loc[testdata.code ==
+                             code, 'predp_long'] = testdata.loc[
                                  testdata.code == code, 'predp_long'].iloc[0]
 
             testdata = testdata[testdata.date > dates[i * testlen]]
@@ -385,12 +383,11 @@ class FutureKeras(FutureDay.Future):
                 hsma = testdata[['code', 'date', 'predp_short',
                                  'predp_long']].copy()
             else:
-                hsma = pd.concat(
-                    [
-                        hsma,
-                        testdata[['code', 'date', 'predp_short', 'predp_long']]
-                    ],
-                    ignore_index=True)
+                hsma = pd.concat([
+                    hsma,
+                    testdata[['code', 'date', 'predp_short', 'predp_long']]
+                ],
+                                 ignore_index=True)
 
         #hsma.to_hdf('Test\\stockkeras\\hsma_dnn_regression_' + self.label + '.h5', 'hsma')
 
@@ -411,15 +408,15 @@ class FutureKeras(FutureDay.Future):
                 (hsmadata['date'] >= dates[(i - ntrain) * testlen])
                 & (hsmadata['date'] <= dates[i * testlen - day])].copy()
             testdata = hsmadata[(hsmadata['date'] >= dates[i * testlen])
-                                & (hsmadata['date'] <=
-                                   dates[(i + 1) * testlen])].copy()
+                                & (hsmadata['date'] <= dates[
+                                    (i + 1) * testlen])].copy()
             print(testdata.date.max())
 
             ###选取盈利潜力最大的10个品种训练并预测
-            traindata[
-                'bestp_r'] = traindata['bestp_short_r'] + traindata['bestp_long_r']
-            selectcode = traindata.groupby(
-                ['code'], as_index=False)[['bestp_r']].mean()
+            traindata['bestp_r'] = traindata['bestp_short_r'] + traindata[
+                'bestp_long_r']
+            selectcode = traindata.groupby(['code'],
+                                           as_index=False)[['bestp_r']].mean()
             selectcode.sort_values(by='bestp_r', ascending=False, inplace=True)
             selectcode = pd.DataFrame({'code': selectcode.code.iloc[0:10]})
             traindata = pd.merge(traindata, selectcode)
@@ -464,11 +461,11 @@ class FutureKeras(FutureDay.Future):
                   (endtime - starttime))
 
             for code in testdata.code.unique():
-                testdata.loc[testdata.code == code,
-                             'predp_short'] = testdata.loc[
+                testdata.loc[testdata.code ==
+                             code, 'predp_short'] = testdata.loc[
                                  testdata.code == code, 'predp_short'].iloc[0]
-                testdata.loc[testdata.code == code,
-                             'predp_long'] = testdata.loc[
+                testdata.loc[testdata.code ==
+                             code, 'predp_long'] = testdata.loc[
                                  testdata.code == code, 'predp_long'].iloc[0]
 
             testdata = testdata[testdata.date > dates[i * testlen]]
@@ -477,12 +474,11 @@ class FutureKeras(FutureDay.Future):
                 hsma = testdata[['code', 'date', 'predp_short',
                                  'predp_long']].copy()
             else:
-                hsma = pd.concat(
-                    [
-                        hsma,
-                        testdata[['code', 'date', 'predp_short', 'predp_long']]
-                    ],
-                    ignore_index=True)
+                hsma = pd.concat([
+                    hsma,
+                    testdata[['code', 'date', 'predp_short', 'predp_long']]
+                ],
+                                 ignore_index=True)
 
         #hsma.to_hdf('Test\\stockkeras\\hsma_dnn_regression_' + self.label + '.h5', 'hsma')
 
@@ -504,15 +500,15 @@ class FutureKeras(FutureDay.Future):
                 (hsmadata['date'] >= dates[(i - ntrain) * testlen])
                 & (hsmadata['date'] <= dates[i * testlen - day])].copy()
             testdata = hsmadata[(hsmadata['date'] >= dates[i * testlen])
-                                & (hsmadata['date'] <=
-                                   dates[(i + 1) * testlen])].copy()
+                                & (hsmadata['date'] <= dates[
+                                    (i + 1) * testlen])].copy()
             print(testdata.date.max())
 
             ###选取盈利潜力最大的10个品种训练并预测
-            traindata[
-                'bestp_r'] = traindata['bestp_short_r'] + traindata['bestp_long_r']
-            selectcode = traindata.groupby(
-                ['code'], as_index=False)[['bestp_r']].mean()
+            traindata['bestp_r'] = traindata['bestp_short_r'] + traindata[
+                'bestp_long_r']
+            selectcode = traindata.groupby(['code'],
+                                           as_index=False)[['bestp_r']].mean()
             selectcode.sort_values(by='bestp_r', ascending=False, inplace=True)
             selectcode = pd.DataFrame({'code': selectcode.code.iloc[0:ncode]})
             traindata = pd.merge(traindata, selectcode)
@@ -573,8 +569,8 @@ class FutureKeras(FutureDay.Future):
                 testdatac.loc[
                     testdatac.code == code, 'predp_short'] = testdatac.loc[
                         testdatac.code == code, 'predp_short'].iloc[0]
-                testdatac.loc[testdatac.code == code,
-                              'predp_long'] = testdatac.loc[
+                testdatac.loc[testdatac.code ==
+                              code, 'predp_long'] = testdatac.loc[
                                   testdatac.code == code, 'predp_long'].iloc[0]
 
                 testdatac = testdatac[testdatac.date > dates[i * testlen]]
@@ -585,12 +581,10 @@ class FutureKeras(FutureDay.Future):
                 hsma = hsma0[['code', 'date', 'predp_short',
                               'predp_long']].copy()
             else:
-                hsma = pd.concat(
-                    [
-                        hsma,
-                        hsma0[['code', 'date', 'predp_short', 'predp_long']]
-                    ],
-                    ignore_index=True)
+                hsma = pd.concat([
+                    hsma, hsma0[['code', 'date', 'predp_short', 'predp_long']]
+                ],
+                                 ignore_index=True)
             #hsma = pd.read_hdf('Test\\stockkeras\\hsma_lstm_regression_' + self.label + '.h5', 'hsma')
 
         return (hsma)
@@ -612,8 +606,8 @@ class FutureKeras(FutureDay.Future):
                 (hsmadata['date'] >= dates[(i - ntrain) * testlen])
                 & (hsmadata['date'] <= dates[i * testlen - day])].copy()
             testdata = hsmadata[(hsmadata['date'] >= dates[i * testlen])
-                                & (hsmadata['date'] <=
-                                   dates[(i + 1) * testlen])].copy()
+                                & (hsmadata['date'] <= dates[
+                                    (i + 1) * testlen])].copy()
             print(testdata.date.max())
 
             ###变换数据集成LSTM所需格式
@@ -660,10 +654,11 @@ class FutureKeras(FutureDay.Future):
             if i == ntrain:
                 hsma = testdata[['code', 'date', 'r']].copy()
             else:
-                hsma = pd.concat(
-                    [hsma, testdata[['code', 'date', 'r']]], ignore_index=True)
-            hsma.to_hdf('Test\\futurekeras\\testresult\\hsma_lstm_cls_fixma_' +
-                        self.label + '_' + modellabel + '.h5', 'hsma')
+                hsma = pd.concat([hsma, testdata[['code', 'date', 'r']]],
+                                 ignore_index=True)
+            hsma.to_hdf(
+                'Test\\futurekeras\\testresult\\hsma_lstm_cls_fixma_' +
+                self.label + '_' + modellabel + '.h5', 'hsma')
 
         return (hsma)
 
@@ -706,8 +701,8 @@ class FutureKeras(FutureDay.Future):
                 (hsmadata['date'] >= dates[(i - ntrain) * testlen])
                 & (hsmadata['date'] <= dates[i * testlen - day - 1])].copy()
             testdata = hsmadata[(hsmadata['date'] >= dates[i * testlen])
-                                & (hsmadata['date'] <=
-                                   dates[(i + 1) * testlen])].copy()
+                                & (hsmadata['date'] <= dates[
+                                    (i + 1) * testlen])].copy()
             preddate = dates[i * testlen]
             startdate = min(testdata.date[testdata.date > preddate])
             enddate = testdata.date.max()
@@ -741,21 +736,21 @@ class FutureKeras(FutureDay.Future):
             codeprob = pd.DataFrame()
             for code in testdata.code.unique():
                 if any((testdata.code == code) & (testdata.date == preddate)):
-                    temp = pd.DataFrame(
-                        {
-                            'code':
-                            code,
-                            'preddate':
-                            preddate,
-                            'startdate':
-                            startdate,
-                            'enddate':
-                            enddate,
-                            'prob':
-                            testdata.loc[(testdata.code == code) & (
-                                testdata.date == preddate), 'prob'].values
-                        },
-                        index=[0])
+                    temp = pd.DataFrame({
+                        'code':
+                        code,
+                        'preddate':
+                        preddate,
+                        'startdate':
+                        startdate,
+                        'enddate':
+                        enddate,
+                        'prob':
+                        testdata.loc[
+                            (testdata.code == code) &
+                            (testdata.date == preddate), 'prob'].values
+                    },
+                                        index=[0])
                     codeprob = pd.concat([codeprob, temp], ignore_index=True)
 
             hsma = pd.concat([hsma, codeprob], ignore_index=True)
@@ -782,9 +777,10 @@ class FutureKeras(FutureDay.Future):
         ntest = len(dates) // testlen
 
         filename = 'Test\\futurekeras\\testresult\\hsma_lstm_cls_breakhlfixlength_testlen' + str(
-            testlen) + '_attr' + str(attr) + '_length' + str(length) + '_tr' + str(
+            testlen
+        ) + '_attr' + str(attr) + '_length' + str(length) + '_tr' + str(
             tr) + '_timesteps' + str(timesteps) + '_' + str(
-            activation) + '_' + modellabel + '_' + self.label + '.h5'
+                activation) + '_' + modellabel + '_' + self.label + '.h5'
 
         if readfile:
             if os.path.exists(filename):
@@ -799,7 +795,8 @@ class FutureKeras(FutureDay.Future):
                 (hsmadata['date'] >= dates[(i - ntrain) * testlen])
                 & (hsmadata['date'] <= dates[(i - 1) * testlen - 1])].copy()
             testdata = hsmadata[(hsmadata['date'] >= dates[i * testlen])
-                & (hsmadata['date'] <= dates[(i + 1) * testlen])].copy()
+                                & (hsmadata['date'] <= dates[
+                                    (i + 1) * testlen])].copy()
             preddate = dates[i * testlen]
             startdate = min(testdata.date[testdata.date > preddate])
             enddate = testdata.date.max()
@@ -833,21 +830,21 @@ class FutureKeras(FutureDay.Future):
             codeprob = pd.DataFrame()
             for code in testdata.code.unique():
                 if any((testdata.code == code) & (testdata.date == preddate)):
-                    temp = pd.DataFrame(
-                        {
-                            'code':
-                            code,
-                            'preddate':
-                            preddate,
-                            'startdate':
-                            startdate,
-                            'enddate':
-                            enddate,
-                            'prob':
-                            testdata.loc[(testdata.code == code) & (
-                                testdata.date == preddate), 'prob'].values
-                        },
-                        index=[0])
+                    temp = pd.DataFrame({
+                        'code':
+                        code,
+                        'preddate':
+                        preddate,
+                        'startdate':
+                        startdate,
+                        'enddate':
+                        enddate,
+                        'prob':
+                        testdata.loc[
+                            (testdata.code == code) &
+                            (testdata.date == preddate), 'prob'].values
+                    },
+                                        index=[0])
                     codeprob = pd.concat([codeprob, temp], ignore_index=True)
 
             hsma = pd.concat([hsma, codeprob], ignore_index=True)
@@ -855,9 +852,9 @@ class FutureKeras(FutureDay.Future):
 
         return (hsma)
 
-    def lstm_classification_fixpv(self, testlen, ntrain, length_t, epochs,
-                                 batchsize, timesteps, day, p, v, lr, tr,
-                                 activation, attr, yvar, modellabel, readfile):
+    def lstm_classification_fixpv(
+            self, testlen, ntrain, length_t, epochs, batchsize, timesteps, day,
+            p, v, lr, tr, activation, attr, yvar, modellabel, readfile):
 
         if attr == 'raw':
             hsmadata_x = self.hsmadata_raw_x(timesteps)
@@ -871,14 +868,16 @@ class FutureKeras(FutureDay.Future):
         if yvar == 'fixp':
             hsmadata_y = self.hsmadata_fixp(day, p, lr)
             filename = 'Test\\futurekeras\\testresult\\hsma_lstm_cls_{}_p{}_day{}_attr{}_length_t{}_tr{}_timesteps{}_{}_{}_{}.h5'.format(
-            yvar,p,day,attr,length_t,tr,timesteps,activation,modellabel,self.label)
+                yvar, p, day, attr, length_t, tr, timesteps, activation,
+                modellabel, self.label)
         elif yvar == 'fixvar':
             hsmadata_y = self.hsmadata_fixvar(day, v, lr)
             filename = 'Test\\futurekeras\\testresult\\hsma_lstm_cls_{}_v{}_day{}_attr{}_length_t{}_tr{}_timesteps{}_{}_{}_{}.h5'.format(
-            yvar,v,day,attr,length_t,tr,timesteps,activation,modellabel,self.label)
+                yvar, v, day, attr, length_t, tr, timesteps, activation,
+                modellabel, self.label)
         else:
             print('Wrong Yvar!')
-            
+
         hsmadata = pd.merge(hsmadata_y, hsmadata_x)
 
         dates = pd.Series(hsmadata['date'].unique()).sort_values()
@@ -898,8 +897,8 @@ class FutureKeras(FutureDay.Future):
                 (hsmadata['date'] >= dates[(i - ntrain) * testlen])
                 & (hsmadata['date'] <= dates[i * testlen - day - 1])].copy()
             testdata = hsmadata[(hsmadata['date'] >= dates[i * testlen])
-                                & (hsmadata['date'] <=
-                                   dates[(i + 1) * testlen])].copy()
+                                & (hsmadata['date'] <= dates[
+                                    (i + 1) * testlen])].copy()
             preddate = dates[i * testlen]
             startdate = min(testdata.date[testdata.date > preddate])
             enddate = testdata.date.max()
@@ -946,29 +945,29 @@ class FutureKeras(FutureDay.Future):
             codeprob = pd.DataFrame()
             for code in testdata.code.unique():
                 if any((testdata.code == code) & (testdata.date == preddate)):
-                    temp = pd.DataFrame(
-                        {
-                            'code':
-                            code,
-                            'preddate':
-                            preddate,
-                            'startdate':
-                            startdate,
-                            'enddate':
-                            enddate,
-                            'prob_long':
-                            testdata.loc[(testdata.code == code) &
-                                         (testdata.date == preddate),
-                                         'prob_long'].values,
-                            'prob_short':
-                            testdata.loc[(testdata.code == code) &
-                                         (testdata.date == preddate),
-                                         'prob_short'].values,
-                            'prob':
-                            testdata.loc[(testdata.code == code) & (
-                                testdata.date == preddate), 'prob'].values
-                        },
-                        index=[0])
+                    temp = pd.DataFrame({
+                        'code':
+                        code,
+                        'preddate':
+                        preddate,
+                        'startdate':
+                        startdate,
+                        'enddate':
+                        enddate,
+                        'prob_long':
+                        testdata.loc[
+                            (testdata.code == code) &
+                            (testdata.date == preddate), 'prob_long'].values,
+                        'prob_short':
+                        testdata.loc[
+                            (testdata.code == code) &
+                            (testdata.date == preddate), 'prob_short'].values,
+                        'prob':
+                        testdata.loc[
+                            (testdata.code == code) &
+                            (testdata.date == preddate), 'prob'].values
+                    },
+                                        index=[0])
                     codeprob = pd.concat([codeprob, temp], ignore_index=True)
 
             hsma = pd.concat([hsma, codeprob], ignore_index=True)
@@ -996,7 +995,8 @@ class FutureKeras(FutureDay.Future):
         dates.index = range(0, len(dates))
 
         filename = 'Test\\futurekeras\\predresult\\hsma_lstm_cls_fixp_p{}_day{}_attr{}_length_t{}_tr{}_timesteps{}_{}_{}_{}_{}.csv'.format(
-                    p,day,attr,length_t,tr,timesteps,activation,modellabel,self.label,preddate)
+            p, day, attr, length_t, tr, timesteps, activation, modellabel,
+            self.label, preddate)
 
         predidx = np.where(dates == preddate)[0][0]
         traindata = hsmadata[
@@ -1041,23 +1041,24 @@ class FutureKeras(FutureDay.Future):
         codeprob = pd.DataFrame()
         for code in testdata.code.unique():
             if any((testdata.code == code) & (testdata.date == preddate)):
-                temp = pd.DataFrame(
-                    {
-                        'code':
-                        code,
-                        'preddate':
-                        preddate,
-                        'prob_long':
-                        testdata.loc[(testdata.code == code) & (
-                            testdata.date == preddate), 'prob_long'].values,
-                        'prob_short':
-                        testdata.loc[(testdata.code == code) & (
-                            testdata.date == preddate), 'prob_short'].values,
-                        'prob':
-                        testdata.loc[(testdata.code == code) & (
-                            testdata.date == preddate), 'prob'].values
-                    },
-                    index=[0])
+                temp = pd.DataFrame({
+                    'code':
+                    code,
+                    'preddate':
+                    preddate,
+                    'prob_long':
+                    testdata.loc[
+                        (testdata.code == code) &
+                        (testdata.date == preddate), 'prob_long'].values,
+                    'prob_short':
+                    testdata.loc[
+                        (testdata.code == code) &
+                        (testdata.date == preddate), 'prob_short'].values,
+                    'prob':
+                    testdata.loc[(testdata.code == code) &
+                                 (testdata.date == preddate), 'prob'].values
+                },
+                                    index=[0])
                 codeprob = pd.concat([codeprob, temp], ignore_index=True)
 
         codeprob.sort_values(by='prob', ascending=False, inplace=True)
@@ -1066,9 +1067,9 @@ class FutureKeras(FutureDay.Future):
 
         return codeprob
 
-    def lstm_classification_r(self, testlen, ntrain, epochs,
-                                batchsize, timesteps, day, tr, activation,
-                                attr, attry, modellabel, readfile):
+    def lstm_classification_r(self, testlen, ntrain, epochs, batchsize,
+                              timesteps, day, tr, activation, attr, attry,
+                              modellabel, readfile):
         if attr == 'raw':
             hsmadata_x = self.hsmadata_raw_x(timesteps)
         elif attr == 'raw2':
@@ -1077,7 +1078,7 @@ class FutureKeras(FutureDay.Future):
             hsmadata_x = self.hsmadata_rawcci_x(timesteps)
         else:
             print('Wrong Attr!')
-        
+
         if attry == 'roc':
             hsmadata_y = self.hsmadata_roc(day)
         elif attry == 'roo':
@@ -1091,10 +1092,9 @@ class FutureKeras(FutureDay.Future):
         ntest = len(dates) // testlen
 
         filename = 'testresult\\futurekeras\\train\\hsma_lstm_cls_r_day' + str(
-            day
-        ) + '_attr' + str(attr) + '_attry' + str(attry) + '_tr' + str(
-            tr) + '_timesteps' + str(timesteps) + '_' + str(
-                activation) + '_' + modellabel + '_' + self.label + '.h5'
+            day) + '_attr' + str(attr) + '_attry' + str(attry) + '_tr' + str(
+                tr) + '_timesteps' + str(timesteps) + '_' + str(
+                    activation) + '_' + modellabel + '_' + self.label + '.h5'
 
         if readfile:
             if os.path.exists(filename):
@@ -1109,8 +1109,8 @@ class FutureKeras(FutureDay.Future):
                 (hsmadata['date'] >= dates[(i - ntrain) * testlen])
                 & (hsmadata['date'] <= dates[i * testlen - day - 1])].copy()
             testdata = hsmadata[(hsmadata['date'] >= dates[i * testlen])
-                                & (hsmadata['date'] <
-                                   dates[(i + 1) * testlen])].copy()
+                                & (hsmadata['date'] < dates[
+                                    (i + 1) * testlen])].copy()
             startdate = dates[i * testlen]
             enddate = testdata.date.max()
             if hsma.shape[0] > 0:
@@ -1152,8 +1152,9 @@ class FutureKeras(FutureDay.Future):
             else:
                 break
 
-            hsmatemp = testdata[['date', 'code', 
-                                 'ratio', 'prob_long', 'prob_short']]
+            hsmatemp = testdata[[
+                'date', 'code', 'ratio', 'prob_long', 'prob_short'
+            ]]
 
             hsma = pd.concat([hsma, hsmatemp], ignore_index=True)
             if readfile:
@@ -1162,7 +1163,8 @@ class FutureKeras(FutureDay.Future):
         return (hsma)
 
     def lstm_classification_bestp(self, testlen, ntrain, epochs, batchsize,
-                            timesteps, ncode, day, lr, activation, modellabel):
+                                  timesteps, ncode, day, lr, activation,
+                                  modellabel):
 
         hsmadata_x = self.hsmadata_raw_x(timesteps)
         hsmadata_y = self.hsmadata_bestp(day, lr)
@@ -1177,13 +1179,13 @@ class FutureKeras(FutureDay.Future):
                 (hsmadata['date'] >= dates[(i - ntrain) * testlen])
                 & (hsmadata['date'] <= dates[i * testlen - day - 1])].copy()
             testdata = hsmadata[(hsmadata['date'] >= dates[i * testlen])
-                                & (hsmadata['date'] <=
-                                   dates[(i + 1) * testlen])].copy()
+                                & (hsmadata['date'] <= dates[
+                                    (i + 1) * testlen])].copy()
             print(testdata.date.max())
 
             ###选取盈利潜力最大的10个品种训练并预测
-            selectcode = traindata.groupby(
-                ['code'], as_index=False)[['bestp_r']].mean()
+            selectcode = traindata.groupby(['code'],
+                                           as_index=False)[['bestp_r']].mean()
             selectcode.sort_values(by='bestp_r', ascending=False, inplace=True)
             selectcode = pd.DataFrame({'code': selectcode.code.iloc[0:ncode]})
             traindata = pd.merge(traindata, selectcode)
@@ -1219,16 +1221,17 @@ class FutureKeras(FutureDay.Future):
             if i == ntrain:
                 hsma = testdata[['code', 'date', 'predp']].copy()
             else:
-                hsma = pd.concat(
-                    [hsma, testdata[['code', 'date', 'predp']]],
-                    ignore_index=True)
-            hsma.to_hdf('Test\\futurekeras\\testresult\\hsma_lstm_cls_' +
-                        self.label + '_' + modellabel + '.h5', 'hsma')
+                hsma = pd.concat([hsma, testdata[['code', 'date', 'predp']]],
+                                 ignore_index=True)
+            hsma.to_hdf(
+                'Test\\futurekeras\\testresult\\hsma_lstm_cls_' + self.label +
+                '_' + modellabel + '.h5', 'hsma')
 
         return (hsma)
 
-    def lstm_classification_bestp_code(self, testlen, ntrain, epochs, batchsize,
-                                 timesteps, ncode, day, lr, modellabel):
+    def lstm_classification_bestp_code(self, testlen, ntrain, epochs,
+                                       batchsize, timesteps, ncode, day, lr,
+                                       modellabel):
 
         hsmadata_x = self.hsmadata_raw_x(timesteps)
         hsmadata_y = self.hsmadata_bestp2(day, lr)
@@ -1243,15 +1246,15 @@ class FutureKeras(FutureDay.Future):
                 (hsmadata['date'] >= dates[(i - ntrain) * testlen])
                 & (hsmadata['date'] <= dates[i * testlen - day])].copy()
             testdata = hsmadata[(hsmadata['date'] >= dates[i * testlen])
-                                & (hsmadata['date'] <=
-                                   dates[(i + 1) * testlen])].copy()
+                                & (hsmadata['date'] <= dates[
+                                    (i + 1) * testlen])].copy()
             print(testdata.date.max())
 
             ###选取盈利潜力最大的10个品种训练并预测
-            traindata[
-                'bestp_r'] = traindata['bestp_short_r'] + traindata['bestp_long_r']
-            selectcode = traindata.groupby(
-                ['code'], as_index=False)[['bestp_r']].mean()
+            traindata['bestp_r'] = traindata['bestp_short_r'] + traindata[
+                'bestp_long_r']
+            selectcode = traindata.groupby(['code'],
+                                           as_index=False)[['bestp_r']].mean()
             selectcode.sort_values(by='bestp_r', ascending=False, inplace=True)
             selectcode = pd.DataFrame({'code': selectcode.code.iloc[0:ncode]})
             traindata = pd.merge(traindata, selectcode)
@@ -1305,14 +1308,13 @@ class FutureKeras(FutureDay.Future):
                 hsma = hsma0[['code', 'date', 'predp_short',
                               'predp_long']].copy()
             else:
-                hsma = pd.concat(
-                    [
-                        hsma,
-                        hsma0[['code', 'date', 'predp_short', 'predp_long']]
-                    ],
-                    ignore_index=True)
-            hsma.to_hdf('Test\\futurekeras\\testresult\\hsma_lstm_cls_code_' +
-                        modellabel + '.h5', 'hsma')
+                hsma = pd.concat([
+                    hsma, hsma0[['code', 'date', 'predp_short', 'predp_long']]
+                ],
+                                 ignore_index=True)
+            hsma.to_hdf(
+                'Test\\futurekeras\\testresult\\hsma_lstm_cls_code_' +
+                modellabel + '.h5', 'hsma')
 
         return (hsma)
 
@@ -1332,15 +1334,15 @@ class FutureKeras(FutureDay.Future):
                 (hsmadata['date'] >= dates[(i - ntrain) * testlen])
                 & (hsmadata['date'] <= dates[i * testlen - day])].copy()
             testdata = hsmadata[(hsmadata['date'] >= dates[i * testlen])
-                                & (hsmadata['date'] <=
-                                   dates[(i + 1) * testlen])].copy()
+                                & (hsmadata['date'] <= dates[
+                                    (i + 1) * testlen])].copy()
             print(testdata.date.max())
 
             ###选取盈利潜力最大的10个品种训练并预测
-            traindata[
-                'bestp_r'] = traindata['bestp_short_r'] + traindata['bestp_long_r']
-            selectcode = traindata.groupby(
-                ['code'], as_index=False)[['bestp_r']].mean()
+            traindata['bestp_r'] = traindata['bestp_short_r'] + traindata[
+                'bestp_long_r']
+            selectcode = traindata.groupby(['code'],
+                                           as_index=False)[['bestp_r']].mean()
             selectcode.sort_values(by='bestp_r', ascending=False, inplace=True)
             selectcode = pd.DataFrame({'code': selectcode.code.iloc[0:ncode]})
             traindata = pd.merge(traindata, selectcode)
@@ -1392,9 +1394,8 @@ class FutureKeras(FutureDay.Future):
                     traindatay_short,
                     epochs=epochs,
                     batch_size=2000)
-                testdatac['predp_short'] = (
-                    model.predict(testdatax_lstm).argmax(axis=1) + 1
-                ) * self.minp
+                testdatac['predp_short'] = (model.predict(testdatax_lstm).
+                                            argmax(axis=1) + 1) * self.minp
 
                 model = Sequential()
                 model.add(
@@ -1422,15 +1423,14 @@ class FutureKeras(FutureDay.Future):
                     traindatay_long,
                     epochs=epochs,
                     batch_size=2000)
-                testdatac['predp_long'] = (
-                    model.predict(testdatax_lstm).argmax(axis=1) + 1
-                ) * self.minp
+                testdatac['predp_long'] = (model.predict(testdatax_lstm).
+                                           argmax(axis=1) + 1) * self.minp
 
                 testdatac.loc[
                     testdatac.code == code, 'predp_short'] = testdatac.loc[
                         testdatac.code == code, 'predp_short'].iloc[0]
-                testdatac.loc[testdatac.code == code,
-                              'predp_long'] = testdatac.loc[
+                testdatac.loc[testdatac.code ==
+                              code, 'predp_long'] = testdatac.loc[
                                   testdatac.code == code, 'predp_long'].iloc[0]
 
                 testdatac = testdatac[testdatac.date > dates[i * testlen]]
@@ -1441,12 +1441,10 @@ class FutureKeras(FutureDay.Future):
                 hsma = hsma0[['code', 'date', 'predp_short',
                               'predp_long']].copy()
             else:
-                hsma = pd.concat(
-                    [
-                        hsma,
-                        hsma0[['code', 'date', 'predp_short', 'predp_long']]
-                    ],
-                    ignore_index=True)
+                hsma = pd.concat([
+                    hsma, hsma0[['code', 'date', 'predp_short', 'predp_long']]
+                ],
+                                 ignore_index=True)
             #hsma = pd.read_hdf('Test\\stockkeras\\hsma_lstm_regression_' + self.label + '.h5', 'hsma')
 
         return (hsma)
@@ -1469,8 +1467,8 @@ class FutureKeras(FutureDay.Future):
                 (hsmadata['date'] >= dates[(i - ntrain) * testlen])
                 & (hsmadata['date'] < dates[i * testlen - day])].copy()
             testdata = hsmadata[(hsmadata['date'] >= dates[i * testlen])
-                                & (hsmadata['date'] <
-                                   dates[(i + 1) * testlen])].copy()
+                                & (hsmadata['date'] < dates[
+                                    (i + 1) * testlen])].copy()
             print(testdata.date.max())
 
             x_train, y_train = self.hsmacnnslice(traindata)

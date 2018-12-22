@@ -15,13 +15,14 @@ import os
 import StockShortTermKeras as sstk
 
 index = '000905.SH'
-market = 'index' # market index SH SZ
+market = 'index'  # market index SH SZ
 datataq = False
 day = 5
 absratio = False
 fee = 0.004
 label = 'test1'
-sstkModel = sstk.StockShortTerm(index, market, datataq, day, absratio, fee, label)
+sstkModel = sstk.StockShortTerm(index, market, datataq, day, absratio, fee,
+                                label)
 self = sstkModel
 
 timesteps = 20
@@ -34,12 +35,8 @@ r = 0.04
 
 hsma = sstkModel.randomforestregressor(testlen, ntrain, ntrees, nodes)
 
-
 ###classification
 minn = 30
 idxma = 0
 hsmatradeday = sstkModel.hsmatradedayclassifier(hsma, minn, idxma)
-tradestat =  sstkModel.tradestat(hsmatradeday)
-
-
-
+tradestat = sstkModel.tradestat(hsmatradeday)

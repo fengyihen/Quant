@@ -18,7 +18,8 @@ day = 2
 length = [1, 3, 5, 10, 20, 40]
 fee = 0.004
 label = 'test2'
-stockdnnestimator = StockDnnEstimator(dataset, absratio, day, length, fee, label)
+stockdnnestimator = StockDnnEstimator(dataset, absratio, day, length, fee,
+                                      label)
 self = stockdnnestimator
 
 ###############################dnnclassifier_estimator###########
@@ -27,8 +28,9 @@ ntrain = 6
 r = 0.02
 hidden_units = [10, 20, 20, 20, 20, 20, 10]
 steps = 200
-hsma = stockdnnestimator.dnnclassifier_estimator(testlen, ntrain, r, hidden_units, steps)
-condition = None#'roc1'
+hsma = stockdnnestimator.dnnclassifier_estimator(testlen, ntrain, r,
+                                                 hidden_units, steps)
+condition = None  #'roc1'
 minn = 10
 hsmatradeday = stockdnnestimator.hsmatradedayclassifier(condition, hsma, minn)
 
@@ -37,8 +39,9 @@ testlen = 30
 ntrain = 12
 hidden_units = [30, 30, 30, 30, 30, 20, 10]
 steps = 200
-hsma = stockdnnestimator.dnnregressor_estimator(testlen, ntrain, hidden_units, steps)
-condition = None#'roc1'
+hsma = stockdnnestimator.dnnregressor_estimator(testlen, ntrain, hidden_units,
+                                                steps)
+condition = None  #'roc1'
 n = 10
 hsmatradeday = stockdnnestimator.hsmatradedayregressor(condition, hsma, n)
 
@@ -48,8 +51,9 @@ ntrain = 6
 r = 0.02
 hidden_units = [10, 20, 20, 20, 10]
 steps = 100
-hsma = stockdnnestimator.widendeepclassifier_estimator(testlen, ntrain, r, hidden_units, steps)
-condition = None#'roc1'
+hsma = stockdnnestimator.widendeepclassifier_estimator(testlen, ntrain, r,
+                                                       hidden_units, steps)
+condition = None  #'roc1'
 minn = 10
 hsmatradeday = stockdnnestimator.hsmatradedayclassifier(condition, hsma, minn)
 
@@ -58,9 +62,8 @@ testlen = 30
 ntrain = 6
 hidden_units = [10, 20, 20, 20, 10]
 steps = 100
-hsma = stockdnnestimator.widendeepregressor_estimator(testlen, ntrain, hidden_units, steps)
-condition = None#'roc1'
+hsma = stockdnnestimator.widendeepregressor_estimator(testlen, ntrain,
+                                                      hidden_units, steps)
+condition = None  #'roc1'
 n = 10
 hsmatradeday = stockdnnestimator.hsmatradedayregressor(condition, hsma, n)
-
-

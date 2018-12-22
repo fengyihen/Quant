@@ -23,9 +23,9 @@ import matplotlib.pyplot as plt
 timestep = 60
 pnumber = 10
 label = 'CTADaytest'
-futuremodel = CTADaySklearn.CTADaySklearn.CTADaySklearn(timestep, pnumber, label)
+futuremodel = CTADaySklearn.CTADaySklearn.CTADaySklearn(
+    timestep, pnumber, label)
 self = futuremodel
-
 
 ####################################################################
 ###############################day test##############################
@@ -33,7 +33,6 @@ self = futuremodel
 code = 'rb000_day'
 mrlist = np.arange(0.005, 0.055, 0.005)
 crlist = np.arange(0.005, 0.055, 0.005)
-
 
 mr = 0.0075
 cr = 0.0095
@@ -85,6 +84,3 @@ hsma = pd.read_hdf(filename, 'hsma')
 hsmaratio, portfolio = futuremodel.hsmadata_predp_r(hsma, lr)
 tradestat = InvestBase.tradestat_portfolio(portfolio)
 plt.plot(portfolio.ratio)
-
-
-
